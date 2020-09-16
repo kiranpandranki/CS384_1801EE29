@@ -65,5 +65,9 @@ def printAP(a, d, n):
 
 
 def printHP(a, d, n):
+    adder = 0
     hp = []
+    for i in range(n):
+        hp.append(1/(a + adder))
+        adder += d
     return hp
