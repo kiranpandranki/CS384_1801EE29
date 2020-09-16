@@ -42,8 +42,10 @@ def power(num1, num2):  # num1 ^ num2
 
 def printGP(a, r, n):
     gp = []
+    multiplier = 1
     for i in range(n):
-        gp.append(a * r**i)
+        gp.append(a * multiplier)
+        multiplier *= r
     return gp
 
 # Python 3 program to print AP.  arithmetic Progression
