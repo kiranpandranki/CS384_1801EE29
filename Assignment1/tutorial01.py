@@ -53,7 +53,11 @@ def printGP(a, r, n):
 
 
 def printAP(a, d, n):
+    adder = 0
     ap = []
+    for i in range(n):
+        ap.append(a + adder)
+        adder += d
     return ap
 
 # Python 3 program to print HP.   Harmonic Progression
@@ -63,6 +67,3 @@ def printAP(a, d, n):
 def printHP(a, d, n):
     hp = []
     return hp
-
-
-print(printGP(2, 3, 5))
