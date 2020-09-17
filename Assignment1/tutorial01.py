@@ -1,9 +1,9 @@
 # Function to add two numbers
 def add(num1, num2):
     if not isinstance(num1, (int, float)):
-        return [0]
+        return 0
     if not isinstance(num2, (int, float)):
-        return [0]
+        return 0
     addition = num1 + num2
     return round(addition, 3)
 
@@ -12,9 +12,9 @@ def add(num1, num2):
 
 def subtract(num1, num2):
     if not isinstance(num1, (int, float)):
-        return [0]
+        return 0
     if not isinstance(num2, (int, float)):
-        return [0]
+        return 0
     subtraction = num1 - num2
     return round(subtraction, 3)
 
@@ -23,9 +23,9 @@ def subtract(num1, num2):
 
 def multiply(num1, num2):
     if not isinstance(num1, (int, float)):
-        return [0]
+        return 0
     if not isinstance(num2, (int, float)):
-        return [0]
+        return 0
     multiplication = num1 * num2
     return round(multiplication, 3)
 
@@ -34,11 +34,11 @@ def multiply(num1, num2):
 
 def divide(num1, num2):
     if not isinstance(num1, (int, float)):
-        return [0]
+        return 0
     if not isinstance(num2, (int, float)):
-        return [0]
+        return 0
     if num2 == 0:
-        return [0]
+        return 0
     division = num1 / num2
     return round(division, 3)
 
@@ -48,11 +48,11 @@ def divide(num1, num2):
 def power(num1, num2):  # num1 ^ num2
     power = 1
     if not isinstance(num1, (int, float)):
-        return [0]
+        return 0
     if not isinstance(num2, (int, float)):
-        return [0]
+        return 0
     if int(num2) != num2:
-        return [0]
+        return 0
     else:
         for i in range(abs(int(num2))):
             power *= num1
