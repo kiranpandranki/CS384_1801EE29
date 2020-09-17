@@ -125,3 +125,6 @@ def printHP(a, d, n):
         hp.append(round(1/(a + adder), 3))
         adder += d
     return hp
+
+
+print(power(0, 0))
