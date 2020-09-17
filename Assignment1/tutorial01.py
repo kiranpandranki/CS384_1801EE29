@@ -54,10 +54,12 @@ def power(num1, num2):  # num1 ^ num2
     if int(num2) != num2:
         return [0]
     else:
-        for i in range(int(num2)):
+        for i in range(abs(int(num2))):
             power *= num1
-
-    return round(power, 3)
+    if num2 < 0:
+        return round(1/power, 3)
+    else:
+        return round(power, 3)
 
 # Python 3 program to print GP.  geometric Progression
 # You cant use the inbuilt python function. Write your own function
