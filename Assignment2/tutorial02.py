@@ -3,6 +3,9 @@ from math import *
 import numpy as np
 # Function to compute mean
 
+import os
+os.system('cls')
+
 
 def mean(first_list):
     # mean Logic
@@ -55,7 +58,7 @@ def variance(first_list):
     mean_of_xi = mean(first_list)
     list_for_summation = []
     for xi in first_list:
-        list_for_summation.append((xi-mean_of_xi)**2)
+        list_for_summation.append(power(xi-mean_of_xi, 2))
     variance_value = round(summation(list_for_summation)/length, 3)
     return variance_value
 
@@ -89,7 +92,7 @@ def mse(first_list, second_list):
             return 0
     list_for_summation = []
     for xi, yi in zip(first_list, second_list):
-        list_for_summation.append((xi-yi)**2)
+        list_for_summation.append(power(xi-yi, 2))
     mse_value = round(summation(list_for_summation)/len(first_list), 3)
     return mse_value
 
@@ -115,12 +118,23 @@ def mae(first_list, second_list):
 # Function to compute NSE. You cant use Python functions
 def nse(first_list, second_list):
     # nse Logic
+    if len(second_list) != len(first_list):
+        return 0
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    for element in second_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    numerator = mse(first_list, second_list)
+    denominator = variance(first_list)
+    nse_value = round(1-(numerator/denominator), 3)
     return nse_value
 
 
 # Function to compute Pearson correlation coefficient. You cant use Python functions
 def pcc(first_list, second_list):
-    # nse Logic
+    # pcc Logic
     if len(second_list) != len(first_list):
         return 0
     for element in first_list:
@@ -152,9 +166,9 @@ def skewness(first_list):
     list_for_summation = []
     mean_of_xi = mean(first_list)
     for xi in first_list:
-        list_for_summation.append((xi-mean_of_xi)**3)
+        list_for_summation.append(power(xi-mean_of_xi, 3))
     numerator = summation(list_for_summation)
-    denominator = length*(standard_deviation(first_list)**3)
+    denominator = length*power(standard_deviation(first_list), 3)
     skewness_value = round(numerator/denominator, 3)
     return skewness_value
 
@@ -163,20 +177,19 @@ def sorting(first_list):
     # Sorting Logic
     # Selection sorting
     length = len(first_list)
+    sorted_list = first_list.copy()
     for i in range(length-1):
         index_of_min = i
         for j in range(i+1, length):
-            if first_list[index_of_min] > first_list[j]:
+            if sorted_list[index_of_min] > sorted_list[j]:
                 index_of_min = j
-        first_list[i], first_list[index_of_min] = first_list[index_of_min],  first_list[i]
-    sorted_list = first_list
+        sorted_list[i], sorted_list[index_of_min] = sorted_list[index_of_min],  sorted_list[i]
     return sorted_list
 
 
 # Function to compute Kurtosis. You cant use Python functions
 def kurtosis(first_list):
     # Kurtosis Logic
-
     return kurtosis_value
 
 
@@ -187,3 +200,25 @@ def summation(first_list):
     for element in first_list:
         summation_value += element
     return summation_value
+
+
+def power(a, b):
+    if b == 1:
+        return a
+    else:
+        return a*power(a, b-1)
+
+
+x, y = np.loadtxt("results.csv", delimiter=",",
+                  usecols=(0, 1), unpack=True, skiprows=1)
+x = list(x)
+y = list(y)
+print('mean is :', mean(x))
+print('median is :', median(x))
+print('variance is :', variance(x))
+print('sd is :', standard_deviation(x))
+print('rmse is :', rmse(x, y))
+print('mse is :', mse(x, y))
+print('nse is :', nse(x, y))
+print('pcc is :', pcc(x, y))
+print('skewness is :', skewness(x))
