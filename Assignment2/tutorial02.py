@@ -145,6 +145,17 @@ def pcc(first_list, second_list):
 # Function to compute Skewness. You cant use Python functions
 def skewness(first_list):
     # Skewness Logic
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    length = len(first_list)
+    list_for_summation = []
+    mean_of_xi = mean(first_list)
+    for xi in first_list:
+        list_for_summation.append((xi-mean_of_xi)**3)
+    numerator = summation(list_for_summation)
+    denominator = length*(standard_deviation(first_list)**3)
+    skewness_value = round(numerator/denominator, 3)
     return skewness_value
 
 
@@ -165,6 +176,7 @@ def sorting(first_list):
 # Function to compute Kurtosis. You cant use Python functions
 def kurtosis(first_list):
     # Kurtosis Logic
+
     return kurtosis_value
 
 
@@ -175,11 +187,3 @@ def summation(first_list):
     for element in first_list:
         summation_value += element
     return summation_value
-
-
-x, y = np.loadtxt("results.csv", delimiter=",",
-                  usecols=(0, 1), unpack=True, skiprows=1)
-x = list(x)
-y = list(y)
-print(nse(x, y))
-print(pcc(x, y))
