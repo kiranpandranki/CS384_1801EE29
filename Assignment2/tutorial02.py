@@ -207,18 +207,3 @@ def power(a, b):
         return a
     else:
         return a*power(a, b-1)
-
-
-x, y = np.loadtxt("results.csv", delimiter=",",
-                  usecols=(0, 1), unpack=True, skiprows=1)
-x = list(x)
-y = list(y)
-print('mean is :', mean(x))
-print('median is :', median(x))
-print('variance is :', variance(x))
-print('sd is :', standard_deviation(x))
-print('rmse is :', rmse(x, y))
-print('mse is :', mse(x, y))
-print('nse is :', nse(x, y))
-print('pcc is :', pcc(x, y))
-print('skewness is :', skewness(x))
