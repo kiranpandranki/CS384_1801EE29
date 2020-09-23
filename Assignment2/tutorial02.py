@@ -3,6 +3,11 @@
 # Function to compute mean
 def mean(first_list):
     # mean Logic
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    summation_value = summation(first_list)
+    mean_value = round(summation_value/len(first_list), 3)
     return mean_value
 
 
