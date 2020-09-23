@@ -1,10 +1,9 @@
 # All decimal 3 places
 from math import *
-import numpy as np
-# Function to compute mean
-
 import os
 os.system('cls')
+
+# Function to compute mean
 
 
 def mean(first_list):
@@ -13,7 +12,7 @@ def mean(first_list):
         if not isinstance(element, (int, float)):
             return 0
     summation_value = summation(first_list)
-    mean_value = round(summation_value/len(first_list), 3)
+    mean_value = round(summation_value/len(first_list), 6)
     return mean_value
 
 
@@ -27,7 +26,7 @@ def median(first_list):
     sorted_list = sorting(first_list)
     if length % 2 == 1:
         median_index = int((length + 1)/2)
-        median_value = round(sorted_list[median_index-1], 3)
+        median_value = round(sorted_list[median_index-1], 6)
     else:
         median_ind_list = [int(length/2), int(length/2 + 1)]
         median_list = [sorted_list[median_ind_list[0]-1],
@@ -43,8 +42,12 @@ def standard_deviation(first_list):
     for element in first_list:
         if not isinstance(element, (int, float)):
             return 0
-    var = variance(first_list)
-    standard_deviation_value = round(sqrt(var), 3)
+    mean_of_xi = mean(first_list)
+    list_for_summation = []
+    for xi in first_list:
+        list_for_summation.append(power(xi-mean_of_xi, 2))
+    variance_value = summation(list_for_summation)/length
+    standard_deviation_value = round(sqrt(variance_value), 6)
     return standard_deviation_value
 
 
@@ -59,7 +62,7 @@ def variance(first_list):
     list_for_summation = []
     for xi in first_list:
         list_for_summation.append(power(xi-mean_of_xi, 2))
-    variance_value = round(summation(list_for_summation)/length, 3)
+    variance_value = round(summation(list_for_summation)/length, 6)
     return variance_value
 
 
@@ -74,8 +77,11 @@ def rmse(first_list, second_list):
     for element in second_list:
         if not isinstance(element, (int, float)):
             return 0
-    mse_value = mse(first_list, second_list)
-    rmse_value = round(sqrt(mse_value), 3)
+    list_for_summation = []
+    for xi, yi in zip(first_list, second_list):
+        list_for_summation.append(power(xi-yi, 2))
+    mse_value = summation(list_for_summation)/len(first_list)
+    rmse_value = round(sqrt(mse_value), 6)
     return rmse_value
 
 
@@ -93,7 +99,7 @@ def mse(first_list, second_list):
     list_for_summation = []
     for xi, yi in zip(first_list, second_list):
         list_for_summation.append(power(xi-yi, 2))
-    mse_value = round(summation(list_for_summation)/len(first_list), 3)
+    mse_value = round(summation(list_for_summation)/len(first_list), 6)
     return mse_value
 
 
@@ -111,7 +117,7 @@ def mae(first_list, second_list):
     list_for_summation = []
     for xi, yi in zip(first_list, second_list):
         list_for_summation.append(abs(xi-yi))
-    mae_value = round(summation(list_for_summation)/len(first_list), 3)
+    mae_value = round(summation(list_for_summation)/len(first_list), 6)
     return mae_value
 
 
@@ -126,15 +132,19 @@ def nse(first_list, second_list):
     for element in second_list:
         if not isinstance(element, (int, float)):
             return 0
-    numerator = mse(first_list, second_list)
-    denominator = variance(first_list)
-    nse_value = round(1-(numerator/denominator), 3)
+    list_for_summation = []
+    for xi, yi in zip(first_list, second_list):
+        list_for_summation.append(power(xi-yi, 2))
+    mse_value = summation(list_for_summation)/len(first_list)
+    numerator = mse_value
+    denominator = power(standard_deviation(first_list), 2)
+    nse_value = round(1-(numerator/denominator), 6)
     return nse_value
 
 
 # Function to compute Pearson correlation coefficient. You cant use Python functions
 def pcc(first_list, second_list):
-    # pcc Logic
+    # nse Logic
     if len(second_list) != len(first_list):
         return 0
     for element in first_list:
@@ -152,7 +162,7 @@ def pcc(first_list, second_list):
     numerator = summation(list_for_summation)
     denominator = standard_deviation(
         first_list)*standard_deviation(second_list)*length
-    pcc_value = round(numerator/denominator, 3)
+    pcc_value = round(numerator/denominator, 6)
     return pcc_value
 
 
@@ -169,7 +179,7 @@ def skewness(first_list):
         list_for_summation.append(power(xi-mean_of_xi, 3))
     numerator = summation(list_for_summation)
     denominator = length*power(standard_deviation(first_list), 3)
-    skewness_value = round(numerator/denominator, 3)
+    skewness_value = round(numerator/denominator, 6)
     return skewness_value
 
 
@@ -199,8 +209,8 @@ def kurtosis(first_list):
     for xi in first_list:
         list_for_summation.append((xi-mean_of_xi)**4)
     numerator = summation(list_for_summation)
-    denominator = length*power(standard_deviation(first_list), 4)
-    kurtosis_value = round(numerator/denominator, 3)
+    denominator = length*power(variance(first_list), 2)
+    kurtosis_value = round(numerator/denominator, 6)
     return kurtosis_value
 
 

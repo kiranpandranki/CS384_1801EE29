@@ -1,8 +1,8 @@
 import numpy as np
 import tutorial02 as A2
 
-actual_answers = [0.558, 0.641, 0.302, 0.091, -0.389, -
-                  1.003, 0.475, 0.226, 0.404, -1.108, 0.051, 0, 0, 0]
+actual_answers = [0.558, 0.641, 0.302, 0.091, -0.389,
+                  1.997, 0.475, 0.226, 0.404, -1.476, 0.051, 0, 0, 0]
 student_answers = []
 
 
@@ -67,7 +67,8 @@ total_test_cases = len(actual_answers)
 count_of_correct_test_cases = 0
 
 for x, y in zip(actual_answers, student_answers):
-    if x == y:
+    if x == round(y, 3):
+        print(x, y)
         count_of_correct_test_cases += 1
 
 print(
