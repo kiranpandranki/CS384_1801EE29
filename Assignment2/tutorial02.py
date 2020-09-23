@@ -55,7 +55,7 @@ def variance(first_list):
     mean_of_xi = mean(first_list)
     list_for_summation = []
     for xi in first_list:
-        list_for_summation.append((xi-mean_of_xi)*(xi-mean_of_xi))
+        list_for_summation.append((xi-mean_of_xi)**2)
     variance_value = round(summation(list_for_summation)/length, 3)
     return variance_value
 
@@ -89,7 +89,7 @@ def mse(first_list, second_list):
             return 0
     list_for_summation = []
     for xi, yi in zip(first_list, second_list):
-        list_for_summation.append((xi-yi)*(xi-yi))
+        list_for_summation.append((xi-yi)**2)
     mse_value = round(summation(list_for_summation)/len(first_list), 3)
     return mse_value
 
@@ -121,6 +121,24 @@ def nse(first_list, second_list):
 # Function to compute Pearson correlation coefficient. You cant use Python functions
 def pcc(first_list, second_list):
     # nse Logic
+    if len(second_list) != len(first_list):
+        return 0
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    for element in second_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    length = len(first_list)
+    list_for_summation = []
+    mean_of_xi = mean(first_list)
+    mean_of_yi = mean(second_list)
+    for xi, yi in zip(first_list, second_list):
+        list_for_summation.append((xi-mean_of_xi)*(yi-mean_of_yi))
+    numerator = summation(list_for_summation)
+    denominator = standard_deviation(
+        first_list)*standard_deviation(second_list)*length
+    pcc_value = round(numerator/denominator, 3)
     return pcc_value
 
 
@@ -157,3 +175,11 @@ def summation(first_list):
     for element in first_list:
         summation_value += element
     return summation_value
+
+
+x, y = np.loadtxt("results.csv", delimiter=",",
+                  usecols=(0, 1), unpack=True, skiprows=1)
+x = list(x)
+y = list(y)
+print(nse(x, y))
+print(pcc(x, y))
