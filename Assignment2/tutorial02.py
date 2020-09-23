@@ -14,7 +14,6 @@ def mean(first_list):
 # Function to compute median. You cant use Python functions
 def median(first_list):
     # median Logic
-
     return median_value
 
 
@@ -69,6 +68,18 @@ def skewness(first_list):
 
 def sorting(first_list):
     # Sorting Logic
+    # Selection sorting
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    length = len(first_list)
+    for i in range(length-1):
+        index_of_min = i
+        for j in range(i+1, length):
+            if first_list[index_of_min] > first_list[j]:
+                index_of_min = j
+        first_list[i], first_list[index_of_min] = first_list[index_of_min],  first_list[i]
+    sorted_list = first_list
     return sorted_list
 
 
@@ -85,3 +96,7 @@ def summation(first_list):
     for element in first_list:
         summation_value += element
     return summation_value
+
+
+print(sorting([0.558, 0.641, 0.302, 0.091, -0.389, -
+               1.003, 0.475, 0.226, 0.404, -1.108, 0.051, 0, 0, 0]))
