@@ -1,5 +1,6 @@
 # All decimal 3 places
 from math import *
+import numpy as np
 # Function to compute mean
 
 
@@ -60,6 +61,18 @@ def variance(first_list):
 # Function to compute RMSE. You cant use Python functions
 def rmse(first_list, second_list):
     # RMSE Logic
+    if len(second_list) != len(first_list):
+        return 0
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    for element in second_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    list_for_summation = []
+    for xi, yi in zip(first_list, second_list):
+        list_for_summation.append((xi-yi)*(xi-yi))
+    rmse_value = round(sqrt(summation(list_for_summation)/len(first_list)), 3)
     return rmse_value
 
 
