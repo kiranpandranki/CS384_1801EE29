@@ -36,10 +36,16 @@ def median(first_list):
 # Function to compute Standard deviation. You cant use Python functions
 def standard_deviation(first_list):
     # Standard deviation Logic
+    length = len(first_list)
     for element in first_list:
         if not isinstance(element, (int, float)):
             return 0
-    standard_deviation_value = round(sqrt(variance(first_list)), 3)
+    mean_of_xi = mean(first_list)
+    list_for_summation = []
+    for xi in first_list:
+        list_for_summation.append((xi-mean_of_xi)*(xi-mean_of_xi))
+    var = summation(list_for_summation)/length
+    standard_deviation_value = round(sqrt(var), 3)
     return standard_deviation_value
 
 
@@ -79,6 +85,18 @@ def rmse(first_list, second_list):
 # Function to compute mse. You cant use Python functions
 def mse(first_list, second_list):
     # mse Logic
+    if len(second_list) != len(first_list):
+        return 0
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    for element in second_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    list_for_summation = []
+    for xi, yi in zip(first_list, second_list):
+        list_for_summation.append((xi-yi)*(xi-yi))
+    mse_value = round(summation(list_for_summation)/len(first_list), 3)
     return mse_value
 
 
@@ -133,3 +151,7 @@ def summation(first_list):
     for element in first_list:
         summation_value += element
     return summation_value
+
+
+x, y = np.loadtxt("results.csv", delimiter=",",
+                  usecols=(0, 1), unpack=True, skiprows=1)
