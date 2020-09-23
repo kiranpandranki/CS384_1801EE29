@@ -1,6 +1,8 @@
 # All decimal 3 places
-
+from math import *
 # Function to compute mean
+
+
 def mean(first_list):
     # mean Logic
     for element in first_list:
@@ -39,7 +41,15 @@ def standard_deviation(first_list):
 # Function to compute variance. You cant use Python functions
 def variance(first_list):
     # variance Logic
-
+    length = len(first_list)
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    mean_of_xi = mean(first_list)
+    list_for_summation = []
+    for xi in first_list:
+        list_for_summation.append((xi-mean_of_xi)*(xi-mean_of_xi))
+    variance_value = round(summation(list_for_summation)/length, 3)
     return variance_value
 
 
@@ -106,6 +116,3 @@ def summation(first_list):
     for element in first_list:
         summation_value += element
     return summation_value
-
-
-print(median([1, 2, 3, 4, 5, 5]))
