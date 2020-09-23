@@ -40,11 +40,7 @@ def standard_deviation(first_list):
     for element in first_list:
         if not isinstance(element, (int, float)):
             return 0
-    mean_of_xi = mean(first_list)
-    list_for_summation = []
-    for xi in first_list:
-        list_for_summation.append((xi-mean_of_xi)*(xi-mean_of_xi))
-    var = summation(list_for_summation)/length
+    var = variance(first_list)
     standard_deviation_value = round(sqrt(var), 3)
     return standard_deviation_value
 
@@ -75,10 +71,8 @@ def rmse(first_list, second_list):
     for element in second_list:
         if not isinstance(element, (int, float)):
             return 0
-    list_for_summation = []
-    for xi, yi in zip(first_list, second_list):
-        list_for_summation.append((xi-yi)*(xi-yi))
-    rmse_value = round(sqrt(summation(list_for_summation)/len(first_list)), 3)
+    mse_value = mse(first_list, second_list)
+    rmse_value = round(sqrt(mse_value), 3)
     return rmse_value
 
 
@@ -103,6 +97,18 @@ def mse(first_list, second_list):
 # Function to compute mae. You cant use Python functions
 def mae(first_list, second_list):
     # mae Logic
+    if len(second_list) != len(first_list):
+        return 0
+    for element in first_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    for element in second_list:
+        if not isinstance(element, (int, float)):
+            return 0
+    list_for_summation = []
+    for xi, yi in zip(first_list, second_list):
+        list_for_summation.append(abs(xi-yi))
+    mae_value = round(summation(list_for_summation)/len(first_list), 3)
     return mae_value
 
 
@@ -151,7 +157,3 @@ def summation(first_list):
     for element in first_list:
         summation_value += element
     return summation_value
-
-
-x, y = np.loadtxt("results.csv", delimiter=",",
-                  usecols=(0, 1), unpack=True, skiprows=1)
