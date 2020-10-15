@@ -20,7 +20,69 @@ def del_create_analytics_folder():
 
 
 def course():
-
+    # Some useful gobal variables containing important paths
+    global student_info_path
+    global analytics_path
+    # Dictionary for stream_code and stream_name
+    stream_dict = {'01': 'btech', '11': 'mtech', '12': 'msc', '21': 'phd'}
+    # Creating some important paths
+    course_path = os.path.join(analytics_path, 'course')
+    misc_path = os.path.join(course_path, 'misc.csv')
+    # Creating 'course' directory
+    if os.path.exists(course_path):
+        shutil.rmtree(course_path)
+        os.makedirs(course_path)
+    else:
+        os.makedirs(course_path)
+    # Reading header row in student_info_path
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.reader(studentinfo_file)
+    for row in student_reader:
+        field_names = row
+        break
+    studentinfo_file.close()
+    # Regular expression for roll number
+    regex_roll = re.compile(r'(\d{2})(\d{2})([A-Z]{2})(\d{2})')
+    # Dictionary reading studentinfo file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.DictReader(studentinfo_file)
+    # Iterating through student_reader
+    for row in student_reader:
+        match = re.fullmatch(regex_roll, row['id'])
+        # Logic in case of match
+        if match:
+            branch = match.group(3).lower()
+            stream = stream_dict[match.group(2)]
+            year = match.group(1)
+            dir_path = os.path.join(course_path, branch, stream)
+            file_name = year+'_'+branch+'_'+stream+'.csv'
+            file_path = os.path.join(dir_path, file_name)
+            if not os.path.exists(file_path):
+                if not os.path.exists(dir_path):
+                    os.makedirs(dir_path)
+                with open(file_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=field_names)
+                    writer.writeheader()
+                    writer.writerow(dict(row))
+            else:
+                with open(file_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=field_names)
+                    writer.writerow(dict(row))
+        # Logic in case of no match
+        else:
+            if not os.path.exists(misc_path):
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writeheader()
+                    misc_writer.writerow(dict(row))
+            else:
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writerow(dict(row))
     pass
 
 
