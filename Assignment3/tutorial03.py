@@ -341,7 +341,62 @@ def dob():
 
 
 def state():
-
+    # Some useful gobal variables containing important paths
+    global student_info_path
+    global analytics_path
+    # Creating some important paths
+    state_path = os.path.join(analytics_path, 'state')
+    misc_path = os.path.join(state_path, 'misc.csv')
+    # Creating 'state' directory
+    if os.path.exists(state_path):
+        shutil.rmtree(state_path)
+        os.makedirs(state_path)
+    else:
+        os.makedirs(state_path)
+    # Reading header row in studentinfo_file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.reader(studentinfo_file)
+    for row in student_reader:
+        field_names = row
+        break
+    studentinfo_file.close()
+    # Regular expression for state
+    regex_state = re.compile(
+        r'[a-zA-Z ]+')
+    # Dictionary reading studentinfo_file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.DictReader(studentinfo_file)
+    # Iterating through student_reader
+    for row in student_reader:
+        match = re.search(regex_state, row['state'])
+        # Logic in case of match
+        if match:
+            file_name = match.group(0).lower()+'.csv'
+            file_path = os.path.join(state_path, file_name)
+            if not os.path.exists(file_path):
+                with open(file_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=field_names)
+                    writer.writeheader()
+                    writer.writerow(dict(row))
+            else:
+                with open(file_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=field_names)
+                    writer.writerow(dict(row))
+        # Logic in case of no match
+        else:
+            if not os.path.exists(misc_path):
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writeheader()
+                    misc_writer.writerow(dict(row))
+            else:
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writerow(dict(row))
     pass
 
 
