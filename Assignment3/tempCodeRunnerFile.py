@@ -1,5 +1,4 @@
-A3.email_domain_extract()
-# A3.gender()
+A3.gender()
 # A3.dob()
 # A3.state()
 # A3.blood_group()
