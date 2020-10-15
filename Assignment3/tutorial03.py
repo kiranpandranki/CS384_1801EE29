@@ -462,5 +462,79 @@ def blood_group():
 
 # Create the new file here and also sort it in this function only.
 def new_file_sort():
-
+    ########  Logic for splitting file #########
+    # Some useful gobal variables containing important paths
+    global student_info_path
+    global analytics_path
+    # Creating path for names_split file
+    names_split_path = os.path.join(
+        analytics_path, 'studentinfo_cs384_names_split.csv')
+    misc_path = os.path.join(analytics_path, 'misc.csv')
+    # Deleting names_split file if it already exists
+    if os.path.exists(names_split_path):
+        os.unlink(names_split_path)
+    # Reading header row in studentinfo_file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.reader(studentinfo_file)
+    for row in student_reader:
+        field_names = row
+        break
+    studentinfo_file.close()
+    # Logic for new header
+    updated_field_names = field_names.copy()
+    for ind in range(len(updated_field_names)):
+        if updated_field_names[ind] == 'full_name':
+            break
+    updated_field_names.insert(ind, 'first_name')
+    updated_field_names.insert(ind+1, 'last_name')
+    updated_field_names.remove('full_name')
+    # Regular expression for names_split
+    regex_names_split = re.compile(
+        r'([a-zA-Z-\'._]+) ([a-zA-Z .\'-_]+)')
+    # Dictionary reading studentinfo_file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.DictReader(studentinfo_file)
+    # Iterating through student_reader
+    for row in student_reader:
+        match = re.search(regex_names_split, row['full_name'])
+        # Logic in case of match
+        if match:
+            full_name = match.group(0)
+            first_name = match.group(1)
+            last_name = match.group(2)
+            # Logic for new row
+            updated_row = list(row.values()).copy()
+            for ind in range(len(updated_row)):
+                if updated_row[ind] == full_name:
+                    break
+            updated_row.insert(ind, first_name)
+            updated_row.insert(ind+1, last_name)
+            updated_row.remove(full_name)
+            #######
+            row_data = dict(zip(updated_field_names, updated_row))
+            if not os.path.exists(names_split_path):
+                with open(names_split_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=updated_field_names)
+                    writer.writeheader()
+                    writer.writerow(row_data)
+            else:
+                with open(names_split_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=updated_field_names)
+                    writer.writerow(row_data)
+        # Logic in case of no match
+        else:
+            if not os.path.exists(misc_path):
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writeheader()
+                    misc_writer.writerow(dict(row))
+            else:
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writerow(dict(row))
+    studentinfo_file.close()
     pass
