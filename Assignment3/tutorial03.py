@@ -266,7 +266,77 @@ def gender():
 
 
 def dob():
-
+    # Some useful gobal variables containing important paths
+    global student_info_path
+    global analytics_path
+    # Creating some important paths
+    dob_path = os.path.join(analytics_path, 'dob')
+    misc_path = os.path.join(dob_path, 'misc.csv')
+    # Creating 'dob' directory
+    if os.path.exists(dob_path):
+        shutil.rmtree(dob_path)
+        os.makedirs(dob_path)
+    else:
+        os.makedirs(dob_path)
+    # Reading header row in studentinfo_file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.reader(studentinfo_file)
+    for row in student_reader:
+        field_names = row
+        break
+    studentinfo_file.close()
+    # Regular expression for dob
+    regex_dob = re.compile(
+        r'(\d{2})-(\d{2})-(\d{4})')
+    # Creating span dictionary
+    span_dict = {'1995': '1999', '2000': '2004',
+                 '2005': '2009', '2010': '2014', '2015': '2020'}
+    # Dictionary reading studentinfo_file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.DictReader(studentinfo_file)
+    # Iterating through student_reader
+    for row in student_reader:
+        match = re.fullmatch(regex_dob, row['dob'])
+        day, mon, year = match.group(1), match.group(2), match.group(3)
+        date_is_valid = None
+        try:
+            date = datetime.datetime(int(year), int(mon), int(day))
+            date_is_valid = True
+        except ValueError:
+            date_is_valid = False
+        # Logic in case of match
+        if match and 1995 <= int(year) <= 2020 and date_is_valid:
+            for key in span_dict:
+                if int(key) <= int(year) <= int(span_dict[key]):
+                    low = key
+                    high = span_dict[key]
+                    break
+            file_name = 'bday'+'_'+low+'_'+high+'.csv'
+            file_path = os.path.join(dob_path, file_name)
+            if not os.path.exists(file_path):
+                with open(file_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=field_names)
+                    writer.writeheader()
+                    writer.writerow(dict(row))
+            else:
+                with open(file_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=field_names)
+                    writer.writerow(dict(row))
+        # Logic in case of no match or out of range
+        else:
+            if not os.path.exists(misc_path):
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writeheader()
+                    misc_writer.writerow(dict(row))
+            else:
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writerow(dict(row))
     pass
 
 
