@@ -537,4 +537,22 @@ def new_file_sort():
                         misc_file, fieldnames=field_names)
                     misc_writer.writerow(dict(row))
     studentinfo_file.close()
+    ######### Logic for sorting according to first_name #########
+    sort_firstname_filename = 'studentinfo_cs384_names_split_sorted_first_name.csv'
+    sort_firstname_path = os.path.join(analytics_path, sort_firstname_filename)
+    # Deleting names_split file if it already exists
+    if os.path.exists(sort_firstname_path):
+        os.unlink(sort_firstname_path)
+    list_of_rows = []
+    with open(names_split_path, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            list_of_rows.append(list(row.values()))
+    list_of_rows = sorted(list_of_rows, key=lambda row: row[ind])
+    with open(sort_firstname_path, 'w', newline='') as sorted_file:
+        writer = csv.writer(sorted_file)
+        writer.writerow(updated_field_names)
+        for row in list_of_rows:
+            writer.writerow(row)
+    ###################################################
     pass
