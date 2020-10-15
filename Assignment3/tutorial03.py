@@ -206,7 +206,62 @@ def email_domain_extract():
 
 
 def gender():
-
+    # Some useful gobal variables containing important paths
+    global student_info_path
+    global analytics_path
+    # Creating some important paths
+    gender_path = os.path.join(analytics_path, 'gender')
+    misc_path = os.path.join(gender_path, 'misc.csv')
+    # Creating 'gender' directory
+    if os.path.exists(gender_path):
+        shutil.rmtree(gender_path)
+        os.makedirs(gender_path)
+    else:
+        os.makedirs(gender_path)
+    # Reading header row in studentinfo_file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.reader(studentinfo_file)
+    for row in student_reader:
+        field_names = row
+        break
+    studentinfo_file.close()
+    # Regular expression for gender
+    regex_gender = re.compile(
+        r'Female|Male')
+    # Dictionary reading studentinfo_file
+    studentinfo_file = open(student_info_path, 'r')
+    student_reader = csv.DictReader(studentinfo_file)
+    # Iterating through student_reader
+    for row in student_reader:
+        match = re.fullmatch(regex_gender, row['gender'])
+        # Logic in case of match
+        if match:
+            file_name = match.group(0).lower()+'.csv'
+            file_path = os.path.join(gender_path, file_name)
+            if not os.path.exists(file_path):
+                with open(file_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=field_names)
+                    writer.writeheader()
+                    writer.writerow(dict(row))
+            else:
+                with open(file_path, 'a', newline='') as append_file:
+                    writer = csv.DictWriter(
+                        append_file, fieldnames=field_names)
+                    writer.writerow(dict(row))
+        # Logic in case of no match
+        else:
+            if not os.path.exists(misc_path):
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writeheader()
+                    misc_writer.writerow(dict(row))
+            else:
+                with open(misc_path, 'a', newline='') as misc_file:
+                    misc_writer = csv.DictWriter(
+                        misc_file, fieldnames=field_names)
+                    misc_writer.writerow(dict(row))
     pass
 
 
