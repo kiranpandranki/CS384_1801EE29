@@ -29,3 +29,13 @@ def del_create_grades_folder():
 
 
 del_create_grades_folder()
+
+regex_roll = re.compile(r'\d{2}\d{2}[A-Z]{2}\d{2}')
+acad_res_df = pd.read_csv(acad_res_stud_grades_path, index_col=0)
+rollno_ds = acad_res_df['roll']
+rollno_ds = rollno_ds.drop_duplicates()
+grade_dict = {'AA': 10, 'AB': 9, 'BB': 8, 'BC': 7,
+              'CC': 6, 'CD': 5, 'DD': 4, 'F': 0, 'I': 0}
+grade_list = []
+for grade in grade_dict:
+    grade_list.append(grade)
