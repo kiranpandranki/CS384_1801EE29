@@ -146,4 +146,49 @@ def rename_Suits(folder_name):
 
 def rename_How_I_Met_Your_Mother(folder_name):
     # rename Logic
+    global Subtitles_path
+    HIMYM_path = os.path.join(Subtitles_path, 'How I Met Your Mother')
+    season_pad = int(input("Enter the season padding : "))
+    episode_pad = int(input("Enter the episode padding : "))
+    regex = re.compile(
+        r'([A-Za-z ]+)-([0-9x -]+)-([a-zA-Z ]+)')
+    for path, dirs, files in os.walk(Subtitles_path):
+        if(path == HIMYM_path):
+            files_list = files
+            break
+    for each_file in files_list:
+        file_extension = each_file[-4:]
+        match = re.search(regex, each_file)
+        episode_data = match.group(2).strip()
+        x, y = episode_data.split('x')
+        if(not '-' in y):
+            season_num = str(int(x))
+            episode_num = str(int(y))
+            if(len(season_num) < season_pad):
+                temp = season_pad - len(season_num)
+                season_num = '0'*temp + season_num
+            if(len(episode_num) < episode_pad):
+                temp = episode_pad - len(episode_num)
+                episode_num = '0'*temp + episode_num
+        else:
+            season_num = str(int(x))
+            if(len(season_num) < season_pad):
+                temp = season_pad - len(season_num)
+                season_num = '0'*temp + season_num
+            episode_num = y.split('-')
+            for i in range(2):
+                episode_num[i] = str(int(episode_num[i]))
+                if(len(episode_num[i]) < episode_pad):
+                    temp = episode_pad - len(episode_num[i])
+                    episode_num[i] = '0'*temp + episode_num[i]
+            episode_num = episode_num[0] + '-'+episode_num[1]
+        episode_title = match.group(3).strip()
+        new_file_name = 'How I Met Your Mother' + ' - ' + 'Season ' + \
+            season_num + ' Episode '+episode_num+' - '+episode_title+file_extension
+        old_file_path = os.path.join(HIMYM_path, each_file)
+        new_file_path = os.path.join(HIMYM_path, new_file_name)
+        try:
+            os.rename(old_file_path, new_file_path)
+        except:
+            os.remove(old_file_path)
     return None
