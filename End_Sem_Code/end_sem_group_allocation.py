@@ -93,6 +93,33 @@ def stats_grouping(number_of_groups, groups_path):
     return None
 
 
+def groups_files(groups_path, n):
+    group_stats_path = os.path.join(groups_path, 'stats_grouping.csv')
+    branch_strength_path = os.path.join(groups_path, 'branch_strength.csv')
+    try:
+        group_stats_df = pd.read_csv(group_stats_path)
+    except:
+        return None
+    branch_strength_df = pd.read_csv(branch_strength_path)
+    branch_list = list(branch_strength_df['BRANCH_CODE'])
+    individual_group_list = group_stats_df['group']
+    for branch in branch_list:
+        branch_path = os.path.join(groups_path, branch+'.csv')
+        individual_branch_df = pd.read_csv(branch_path)
+        members_series = group_stats_df[branch]
+        start_ind = 0
+        for individual_group, mem in zip(individual_group_list, members_series):
+            individual_group_path = os.path.join(groups_path, individual_group)
+            if not os.path.exists(individual_group_path):
+                individual_branch_df.iloc[start_ind:start_ind +
+                                          mem].to_csv(individual_group_path, mode='a', index=False)
+            else:
+                individual_branch_df.iloc[start_ind:start_ind +
+                                          mem].to_csv(individual_group_path, mode='a', index=False, header=False)
+            start_ind += mem
+    return None
+
+
 def group_allocation(filename, number_of_groups):
     data_file_path = os.path.join(cwd_path, filename)
     no_gps = number_of_groups
@@ -105,4 +132,5 @@ def group_allocation(filename, number_of_groups):
     branch_strength(data_file_path, groups_path)
     individual_csv(data_file_path, groups_path)
     stats_grouping(number_of_groups, groups_path)
+    groups_files(groups_path, number_of_groups)
     return None
