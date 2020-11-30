@@ -54,6 +54,45 @@ def individual_csv(data_file_path, groups_path):
     return None
 
 
+def stats_grouping(number_of_groups, groups_path):
+    n = number_of_groups
+    if n <= 0:
+        return None
+    padding = 2
+    list_of_list = [['group', 'total']]
+    branch_strength_path = os.path.join(groups_path, 'branch_strength.csv')
+    df = pd.read_csv(branch_strength_path)
+    branch_list = list(df['BRANCH_CODE'])
+    strength_list = [int(x) for x in list(df['STRENGTH'])]
+    for x in branch_list:
+        list_of_list[0].append(x)
+    for i in range(1, n+1):
+        if(len(str(i)) < padding):
+            group_no = '0'*(padding-len(str(i))) + str(i)
+        else:
+            group_no = str(i)
+        group_file_name = 'Group_G'+group_no+'.csv'
+        list_of_list.append([group_file_name])
+    left_list = []
+    for x in strength_list:
+        appender = int(x/n)
+        left_list.append(x % n)
+        for ind in range(1, n+1):
+            list_of_list[ind].append(appender)
+    if sum(left_list):
+        start_ind2 = 1
+        for ind1 in range(len(left_list)):
+            for ind2 in range(start_ind2, left_list[ind1]+start_ind2):
+                list_of_list[ind2 % n if ind2 % n else n][ind1+1] += 1
+            start_ind2 = ind2+1
+    for i in range(1, n+1):
+        list_of_list[i].insert(1, sum(list_of_list[i][1:]))
+    group_stats_df = pd.DataFrame(list_of_list)
+    group_stats_path = os.path.join(groups_path, 'stats_grouping.csv')
+    group_stats_df.to_csv(group_stats_path, header=False, index=False)
+    return None
+
+
 def group_allocation(filename, number_of_groups):
     data_file_path = os.path.join(cwd_path, filename)
     no_gps = number_of_groups
@@ -65,4 +104,5 @@ def group_allocation(filename, number_of_groups):
         os.mkdir(groups_path)
     branch_strength(data_file_path, groups_path)
     individual_csv(data_file_path, groups_path)
+    stats_grouping(number_of_groups, groups_path)
     return None
