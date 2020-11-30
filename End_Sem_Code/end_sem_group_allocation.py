@@ -29,6 +29,31 @@ def branch_strength(data_file_path, groups_path):
     return None
 
 
+def individual_csv(data_file_path, groups_path):
+    branch_path_list = []
+    with open(data_file_path, 'r') as read_file:
+        reader = csv.DictReader(read_file)
+        for row in reader:
+            branch_file_path = os.path.join(
+                groups_path, row['Roll'][4:6]+'.csv')
+            if not os.path.exists(branch_file_path):
+                branch_path_list.append(branch_file_path)
+                with open(branch_file_path, 'a', newline='') as append_file:
+                    appender = csv.DictWriter(append_file, fieldnames=[
+                                              'Roll', 'Name', 'Email'])
+                    appender.writeheader()
+                    appender.writerow(dict(row))
+            else:
+                with open(branch_file_path, 'a', newline='') as append_file:
+                    appender = csv.DictWriter(append_file, fieldnames=[
+                                              'Roll', 'Name', 'Email'])
+                    appender.writerow(dict(row))
+    for branch_path in branch_path_list:
+        branch_data_frame = pd.read_csv(branch_path)
+        branch_data_frame.sort_values('Roll', inplace=True)
+    return None
+
+
 def group_allocation(filename, number_of_groups):
     data_file_path = os.path.join(cwd_path, filename)
     no_gps = number_of_groups
@@ -39,4 +64,5 @@ def group_allocation(filename, number_of_groups):
     else:
         os.mkdir(groups_path)
     branch_strength(data_file_path, groups_path)
+    individual_csv(data_file_path, groups_path)
     return None
