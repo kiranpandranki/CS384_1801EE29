@@ -22,7 +22,21 @@ def new_file():
 
 
 def open_file():
-    pass
+    global file
+    file = askopenfilename(defaultextension=".txt", filetypes=[
+        ("All Files", '*.*'), ("Text Documents", "*.txt"), ("Python Files", '*.py')])
+    if file == "":
+        file = None
+    else:
+        try:
+            f = open(file, 'r')
+            root.title(os.path.basename(file + "-Notepad"))
+            text_space.delete(1.0, END)
+            text_space.insert(1.0, f.read())
+            f.close()
+        except:
+            msg.showinfo("File open error:",
+                         "This kind of file cannot be opened !")
 
 
 def save_file():
