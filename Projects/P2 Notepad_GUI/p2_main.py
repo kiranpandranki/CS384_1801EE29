@@ -23,14 +23,14 @@ def new_file():
 
 def open_file():
     global file
-    file = askopenfilename(defaultextension=".txt", filetypes=[
-        ("All Files", '*.*'), ("Text Documents", "*.txt"), ("Python Files", '*.py')])
+    file = askopenfilename(defaultextension=".txt",
+                           filetypes=[("All Files", '*.*'), ("Text Documents", "*.txt"), ("Python Files", '*.py')])
     if file == "":
         file = None
     else:
         try:
             f = open(file, 'r')
-            root.title(os.path.basename(file + "-Notepad"))
+            root.title(os.path.basename(file + " - Notepad"))
             text_space.delete(1.0, END)
             text_space.insert(1.0, f.read())
             f.close()
@@ -74,7 +74,17 @@ def save_as():
 
 
 def delete():
-    pass
+    global file
+    if file is None:
+        msg.showinfo("Delete Error!", "The current file is not yet saved")
+    else:
+        ans = msg.askyesno("Confirmation question:", "Do you really want to delete " + os.path.basename(file))
+        if ans:
+            text_space.delete(1.0, END)
+            root.title('Untitled - Notepad')
+            os.unlink(file)
+            msg.showinfo("Deleted Successfully!", "Successfully deleted " + os.path.basename(file))
+            file = None
 
 
 def find_func(find_input):
