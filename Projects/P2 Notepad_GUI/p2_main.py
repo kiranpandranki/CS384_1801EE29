@@ -88,11 +88,47 @@ def delete():
 
 
 def find_func(find_input):
-    pass
+    word = find_input.get()
+    text_space.tag_remove("match", "1.0", END)
+    matches = 0
+    if word:
+        start_pos = '1.0'
+        while True:
+            start_pos = text_space.search(word, start_pos, END)
+            if not start_pos:
+                break
+            end_pos = f'{start_pos} + {len(word)}c'
+            text_space.tag_add('match', start_pos, end_pos)
+            matches += 1
+            start_pos = end_pos
+            text_space.tag_config("mathc", foreground='red', background='yellow')
 
 
 def find():
-    pass
+    def find_close():
+        text_space.tag_remove('match', '1.0', END)
+        find_popup.destroy()
+
+    find_popup = Toplevel()
+    find_popup.geometry("400x200")
+    find_popup.wm_iconbitmap('notepad.ico')
+    find_popup.title("Find")
+    find_popup.resizable(0, 0)
+    # Creating Labelframe
+    find_frame = LabelFrame(find_popup, text="Find")
+    find_frame.pack(pady=30)
+    # Creating label for find
+    find_word = Label(find_frame, text="Find")
+    # Creating entry for find
+    find_input = Entry(find_frame, width=30)
+    # Creating button for find
+    find_button = Button(find_frame, text="Find", command=lambda: find_func(find_input))
+    close_button = Button(find_frame, text="Close", command=find_close)
+    # Creating grids for find and replace
+    find_word.grid(row=0, column=0, padx=5, pady=5)
+    find_input.grid(row=0, column=1, padx=5, pady=5)
+    find_button.grid(row=2, column=0, padx=30, pady=5)
+    close_button.grid(row=2, column=1, padx=30, pady=5)
 
 
 def find_and_replace():
