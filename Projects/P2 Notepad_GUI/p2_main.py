@@ -8,7 +8,17 @@ import time
 
 
 def new_file():
-    pass
+    global file
+    ans = msg.askyesnocancel("Notepad", 'Do you want to save this file?')
+    if ans:
+        save_file()
+        root.title('Untitled-Notepad')
+        file = None
+        text_space.delete(1.0, END)
+    elif not ans:
+        root.title('Untitled-Notepad')
+        file = None
+        text_space.delete(1.0, END)
 
 
 def open_file():
