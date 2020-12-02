@@ -47,21 +47,30 @@ def save_file():
         if file == "":
             file = None
         else:
-            f = open(file,'w')
-            f.write(text_space.get(1.0,END))
+            f = open(file, 'w')
+            f.write(text_space.get(1.0, END))
             f.close()
-            root.title(os.path.basename(file)+' - Notepad')
+            root.title(os.path.basename(file) + ' - Notepad')
     else:
-        f = open(file,'w')
-        f.write(text_space.get())
+        f = open(file, 'w')
+        f.write(text_space.get(1.0, END))
         f.close()
 
 
 def save_as():
     global file
     if file is None:
-        pass
-
+        save_file()
+    else:
+        file = asksaveasfilename(initialfile=os.path.basename(file), defaultextension='.txt',
+                                 filetype=[("All Files", "*.*"), ("Text Documents", '*.txt')])
+        if file == '':
+            file = None
+        else:
+            f = open(file, 'w')
+            f.write(text_space.get(1.0, END))
+            f.close()
+            root.title(os.path.basename(file) + ' - Notepad')
 
 
 def delete():
