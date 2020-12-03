@@ -204,7 +204,13 @@ def char_count():
 
 
 def created_time():
-    pass
+    global file
+    if file == None:
+        msg.showinfo("Time Error", "No file was opened !")
+    else:
+        x = os.path.getctime(file)
+        msg.showinfo("Created Time:",
+                     f"The file {os.path.basename(file)} is Created on:\n{time.ctime(x)}")
 
 
 def modified_time():
