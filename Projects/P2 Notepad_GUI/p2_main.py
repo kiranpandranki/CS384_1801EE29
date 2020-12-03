@@ -179,11 +179,28 @@ def find_and_replace():
 
 
 def word_count():
-    pass
+    text_var = text_space.get(1.0, END)
+    word_list = text_var.split(' ')
+    temp_word_list = []
+    count = 0
+    for x in word_list:
+        temp_word_list.extend(x.split('\n'))
+    for x in temp_word_list:
+        if x != "":
+            count += 1
+    msg.showinfo("WordCount :", f"There are a {count} words in total.")
 
 
 def char_count():
-    pass
+    text_var = text_space.get(1.0, END)
+    word_list = text_var.split('\n')
+    temp_word_list = []
+    count = 0
+    for x in word_list:
+        if x != "":
+            count += len(x)
+    msg.showinfo("Character Count :",
+                 f"There are a {count} characters in total")
 
 
 def created_time():
