@@ -78,12 +78,14 @@ def delete():
     if file is None:
         msg.showinfo("Delete Error!", "The current file is not yet saved")
     else:
-        ans = msg.askyesno("Confirmation question:", "Do you really want to delete " + os.path.basename(file))
+        ans = msg.askyesno("Confirmation question:",
+                           "Do you really want to delete " + os.path.basename(file))
         if ans:
             text_space.delete(1.0, END)
             root.title('Untitled - Notepad')
             os.unlink(file)
-            msg.showinfo("Deleted Successfully!", "Successfully deleted " + os.path.basename(file))
+            msg.showinfo("Deleted Successfully!",
+                         "Successfully deleted " + os.path.basename(file))
             file = None
 
 
@@ -94,14 +96,15 @@ def find_func(find_input):
     if word:
         start_pos = '1.0'
         while True:
-            start_pos = text_space.search(word, start_pos, END)
+            start_pos = text_space.search(word, start_pos, stopindex=END)
             if not start_pos:
                 break
             end_pos = f'{start_pos} + {len(word)}c'
             text_space.tag_add('match', start_pos, end_pos)
             matches += 1
             start_pos = end_pos
-            text_space.tag_config("mathc", foreground='red', background='yellow')
+            text_space.tag_config(
+                "match", foreground='red', background='yellow')
 
 
 def find():
@@ -122,7 +125,8 @@ def find():
     # Creating entry for find
     find_input = Entry(find_frame, width=30)
     # Creating button for find
-    find_button = Button(find_frame, text="Find", command=lambda: find_func(find_input))
+    find_button = Button(find_frame, text="Find",
+                         command=lambda: find_func(find_input))
     close_button = Button(find_frame, text="Close", command=find_close)
     # Creating grids for find and replace
     find_word.grid(row=0, column=0, padx=5, pady=5)
@@ -132,23 +136,91 @@ def find():
 
 
 def find_and_replace():
-    pass
+    def replace():
+        find_word = find_input.get()
+        replace_word = replace_input.get()
+        text = text_space.get(1.0, END)
+        new_text = text.replace(find_word, replace_word)
+        text_space.delete(1.0, END)
+        text_space.insert(1.0, new_text)
+
+    def find_replace_close():
+        text_space.tag_remove("match", "1.0", END)
+        find_replace_popup.destroy()
+
+    find_replace_popup = Toplevel()
+    find_replace_popup.geometry("400x300")
+    find_replace_popup.wm_iconbitmap('notepad.ico')
+    find_replace_popup.title("Find and Replace")
+    find_replace_popup.resizable(0, 0)
+    # Creating Labelframe
+    find_frame = LabelFrame(find_replace_popup, text="Find and Replace")
+    find_frame.pack(pady=30)
+    # Creating labels for find and replace
+    find_word = Label(find_frame, text="Find")
+    replace_word = Label(find_frame, text="Replace")
+    # Creating entries for find and replace
+    find_input = Entry(find_frame, width=30)
+    replace_input = Entry(find_frame, width=30)
+    # Creating buttons for find and replace
+    find_button = Button(find_frame, text="Find",
+                         command=lambda: find_func(find_input))
+    replace_button = Button(find_frame, text="Replace", command=replace)
+    close_button = Button(find_frame, text="Close",
+                          command=lambda: find_replace_close())
+    # Creating grids for find and replace
+    find_word.grid(row=0, column=0, padx=5, pady=5)
+    replace_word.grid(row=1, column=0, padx=5, pady=5)
+    find_input.grid(row=0, column=1, padx=5, pady=5)
+    replace_input.grid(row=1, column=1, padx=5, pady=5)
+    find_button.grid(row=2, column=0, padx=10, pady=5)
+    replace_button.grid(row=2, column=1, padx=10, pady=5)
+    close_button.grid(row=2, column=2, padx=10, pady=5)
 
 
 def word_count():
-    pass
+    text_var = text_space.get(1.0, END)
+    word_list = text_var.split(' ')
+    temp_word_list = []
+    count = 0
+    for x in word_list:
+        temp_word_list.extend(x.split('\n'))
+    for x in temp_word_list:
+        if x != "":
+            count += 1
+    msg.showinfo("WordCount :", f"There are a {count} words in total.")
 
 
 def char_count():
-    pass
+    text_var = text_space.get(1.0, END)
+    word_list = text_var.split('\n')
+    temp_word_list = []
+    count = 0
+    for x in word_list:
+        if x != "":
+            count += len(x)
+    msg.showinfo("Character Count :",
+                 f"There are a {count} characters in total")
 
 
 def created_time():
-    pass
+    global file
+    if file == None:
+        msg.showinfo("Time Error", "No file was opened !")
+    else:
+        x = os.path.getctime(file)
+        msg.showinfo("Created Time:",
+                     f"The file {os.path.basename(file)} is Created on:\n{time.ctime(x)}")
 
 
 def modified_time():
-    pass
+    global file
+    if file == None:
+        msg.showinfo("Time Error", "No file was opened !")
+    else:
+        x = os.path.getmtime(file)
+        msg.showinfo("Last Modified Time:",
+                     f"The file {os.path.basename(file)} is last modified on:\n{time.ctime(x)}")
 
 
 root = Tk()
