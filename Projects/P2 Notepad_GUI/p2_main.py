@@ -214,7 +214,13 @@ def created_time():
 
 
 def modified_time():
-    pass
+    global file
+    if file == None:
+        msg.showinfo("Time Error", "No file was opened !")
+    else:
+        x = os.path.getmtime(file)
+        msg.showinfo("Last Modified Time:",
+                     f"The file {os.path.basename(file)} is last modified on:\n{time.ctime(x)}")
 
 
 root = Tk()
