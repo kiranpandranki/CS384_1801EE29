@@ -61,7 +61,7 @@ root.title("Untitled-Notepad")
 root.wm_iconbitmap("notepad.ico")
 file = None
 # For Entering Text...
-text_space = Text(root, font="Times 18")
+text_space = Text(root, font="Times 18", bg="blue")
 text_space.pack(expand=True, fill=BOTH)
 ####################################
 Main_menu = Menu(root)
