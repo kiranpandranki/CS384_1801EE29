@@ -167,6 +167,7 @@ def login():
 
 def run_quiz(quiz_number, user_name):
     def submit():
+        showinfo("Submission Successful", "Your responses have been submitted")
         marks_obtained = 0
         total_marks = 0
         legend_correct_choices = 0
@@ -286,6 +287,8 @@ def run_quiz(quiz_number, user_name):
             timer_label.after(1000, clock, start_time)
         else:
             showinfo("Time up !!!", "Your time is up !!")
+<<<<<<< HEAD
+=======
             run_quiz_frame.destroy()
             submit()
 
@@ -300,6 +303,7 @@ def run_quiz(quiz_number, user_name):
     def submit_shortcut():
         reply = msg.askyesnocancel('Submit', 'Do you want to Submit?')
         if reply:
+>>>>>>> 09258ea2f92d8cff0db0abe7871b0eb05ce0b765
             run_quiz_frame.destroy()
             submit()
 
@@ -311,7 +315,11 @@ def run_quiz(quiz_number, user_name):
         minutes = time_
         seconds = '00'
         timer_label = Label(instructions_frame, text='Time left : ' +
+<<<<<<< HEAD
+                            minutes + ':' + seconds, font='comicsans 18 bold')
+=======
                                                      minutes + ':' + seconds, font='comicsans 18 bold')
+>>>>>>> 09258ea2f92d8cff0db0abe7871b0eb05ce0b765
         timer_label.grid(row=0, column=2, sticky='e')
         start_time = t.strftime("%M:%S")
         clock(start_time)

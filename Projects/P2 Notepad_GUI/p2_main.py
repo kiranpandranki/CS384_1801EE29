@@ -1,3 +1,8 @@
+
+# 1801EE29 - Pandranki Kiran
+# 1801EE24 - Rishi Kanth
+
+
 from tkinter import *
 import tkinter.messagebox as msg
 from tkinter import ttk
@@ -7,7 +12,7 @@ import re
 import time
 
 
-def new_file():
+def new_file(event=''):
     global file
     ans = msg.askyesnocancel("Notepad", 'Do you want to save this file?')
     if ans:
@@ -21,7 +26,7 @@ def new_file():
         text_space.delete(1.0, END)
 
 
-def open_file():
+def open_file(event=''):
     global file
     file = askopenfilename(defaultextension=".txt",
                            filetypes=[("All Files", '*.*'), ("Text Documents", "*.txt"), ("Python Files", '*.py')])
@@ -39,7 +44,7 @@ def open_file():
                          "This kind of file cannot be opened !")
 
 
-def save_file():
+def save_file(event=''):
     global file
     if file is None:
         file = asksaveasfilename(initialfile="Untitled.txt", defaultextension='.txt',
@@ -57,7 +62,7 @@ def save_file():
         f.close()
 
 
-def save_as():
+def save_as(event=''):
     global file
     if file is None:
         save_file()
@@ -73,7 +78,7 @@ def save_as():
             root.title(os.path.basename(file) + ' - Notepad')
 
 
-def delete():
+def delete(event=''):
     global file
     if file is None:
         msg.showinfo("Delete Error!", "The current file is not yet saved")
@@ -107,7 +112,7 @@ def find_func(find_input):
                 "match", foreground='red', background='yellow')
 
 
-def find():
+def find(event=''):
     def find_close():
         text_space.tag_remove('match', '1.0', END)
         find_popup.destroy()
@@ -135,7 +140,7 @@ def find():
     close_button.grid(row=2, column=1, padx=30, pady=5)
 
 
-def find_and_replace():
+def find_and_replace(event=''):
     def replace():
         find_word = find_input.get()
         replace_word = replace_input.get()
@@ -178,7 +183,7 @@ def find_and_replace():
     close_button.grid(row=2, column=2, padx=10, pady=5)
 
 
-def word_count():
+def word_count(event=''):
     text_var = text_space.get(1.0, END)
     word_list = text_var.split(' ')
     temp_word_list = []
@@ -191,7 +196,7 @@ def word_count():
     msg.showinfo("WordCount :", f"There are a {count} words in total.")
 
 
-def char_count():
+def char_count(event=''):
     text_var = text_space.get(1.0, END)
     word_list = text_var.split('\n')
     temp_word_list = []
@@ -203,7 +208,7 @@ def char_count():
                  f"There are a {count} characters in total")
 
 
-def created_time():
+def created_time(event=''):
     global file
     if file == None:
         msg.showinfo("Time Error", "No file was opened !")
@@ -213,7 +218,7 @@ def created_time():
                      f"The file {os.path.basename(file)} is Created on:\n{time.ctime(x)}")
 
 
-def modified_time():
+def modified_time(event=''):
     global file
     if file == None:
         msg.showinfo("Time Error", "No file was opened !")
@@ -236,15 +241,28 @@ Main_menu = Menu(root)
 
 # File Menu...
 File_menu = Menu(Main_menu, tearoff=0)
+root.bind('<Control-n>', new_file)
+root.bind('<Control-N>', new_file)
 File_menu.add_command(label='New', command=new_file,
-                      font='times')
+                      font='times', accelerator='Ctrl+N')
+root.bind('<Control-o>', open_file)
+root.bind('<Control-O>', open_file)
 File_menu.add_command(label='Open', command=open_file,
-                      font='times')
-File_menu.add_command(label='Save', command=save_file, font='times')
+                      font='times', accelerator='Ctrl+O')
+root.bind('<Control-s>', save_file)
+root.bind('<Control-S>', save_file)
+File_menu.add_command(label='Save', command=save_file,
+                      font='times', accelerator='Ctrl+S')
 File_menu.add_command(label='Save as', command=save_as, font='times')
 File_menu.add_separator()
-File_menu.add_command(label='Delete', command=delete, font='times')
-File_menu.add_command(label='Exit', command=quit, font='times')
+root.bind('<Control-d>', delete)
+root.bind('<Control-D>', delete)
+File_menu.add_command(label='Delete', command=delete,
+                      font='times', accelerator='Ctrl+D')
+root.bind('<Control-e>', quit)
+root.bind('<Control-E>', quit)
+File_menu.add_command(label='Exit', command=quit,
+                      font='times', accelerator='Ctrl+E')
 Main_menu.add_cascade(label='File', font='times', menu=File_menu)
 #####################################
 # Edit Menu...
@@ -252,27 +270,41 @@ Edit_menu = Menu(Main_menu, tearoff=0)
 Edit_menu.add_command(label='Cut',
                       command=lambda: text_space.event_generate("<<Cut>>"), font='times', accelerator="Ctrl+X")
 Edit_menu.add_command(label='Copy',
-                      command=lambda: text_space.event_generate("<<Copy>>"), font='times', accelerator="Ctrl+P")
+                      command=lambda: text_space.event_generate("<<Copy>>"), font='times', accelerator="Ctrl+C")
 Edit_menu.add_command(label='Paste',
                       command=lambda: text_space.event_generate("<<Paste>>"), font='times', accelerator="Ctrl+V")
 Edit_menu.add_separator()
+root.bind('<Control-f>', find)
+root.bind('<Control-F>', find)
 Edit_menu.add_command(label='Find', command=find,
-                      font='times')
+                      font='times', accelerator='Ctrl+F')
+root.bind('<Control-h>', find_and_replace)
+root.bind('<Control-H>', find_and_replace)
 Edit_menu.add_command(label='Find and Replace',
-                      command=find_and_replace, font='times')
+                      command=find_and_replace, font='times', accelerator='Ctrl+H')
 Edit_menu.add_command(
     label='Clear all', command=lambda: text_space.delete(1.0, END), font='times')
 Main_menu.add_cascade(menu=Edit_menu, label='Edit', font='times')
 #####################################
 # Stats Menu...
 Stats_menu = Menu(Main_menu, tearoff=0)
-Stats_menu.add_command(label='Word Count', command=word_count, font='times')
-Stats_menu.add_command(label='Char Count', command=char_count, font='times')
+root.bind('<Control-w>', word_count)
+root.bind('<Control-W>', word_count)
+Stats_menu.add_command(label='Word Count', command=word_count,
+                       font='times', accelerator='Ctrl+W')
+root.bind('<Control-c><h>', char_count)
+root.bind('<Control-C><H>', char_count)
+Stats_menu.add_command(label='Char Count', command=char_count,
+                       font='times', accelerator='Ctrl+C+H')
 Stats_menu.add_separator()
+root.bind('<Control-c><t>', created_time)
+root.bind('<Control-C><T>', created_time)
 Stats_menu.add_command(label='Created Time',
-                       command=created_time, font='times')
+                       command=created_time, font='times', accelerator='Ctrl+C+T')
+root.bind('<Control-m><t>', modified_time)
+root.bind('<Control-M><T>', modified_time)
 Stats_menu.add_command(label='Modified Time',
-                       command=modified_time, font='times')
+                       command=modified_time, font='times', accelerator='Ctrl+M+T')
 Main_menu.add_cascade(menu=Stats_menu, label='Stats', font='times')
 #####################################
 
