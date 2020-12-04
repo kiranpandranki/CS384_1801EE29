@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.messagebox import showinfo
+import tkinter.messagebox as msg
 import sqlite3
 import csv
 import os
@@ -7,6 +8,7 @@ import datetime
 import hashlib
 import pandas as pd
 import time as t
+
 cwd = os.getcwd()
 
 
@@ -62,7 +64,8 @@ def register():
 
             hash_password_temp = hashlib.sha224(
                 text_variable_list[2].get().encode()).hexdigest()
-            data_list = [(text_variable_list[1].get()), (hash_password_temp), (text_variable_list[0].get().capitalize()),
+            data_list = [(text_variable_list[1].get()), (hash_password_temp),
+                         (text_variable_list[0].get().capitalize()),
                          (text_variable_list[4].get())]
             cursor.execute("""
             INSERT INTO project1_registration(username,password,name,whatsapp_number)
@@ -70,6 +73,7 @@ def register():
             """, data_list)
             db.commit()
             showinfo('', 'Registration Successful!')
+        root.unbind('<Return>')
         back()
 
     register_list = ['Name', 'Roll', 'Password',
@@ -97,6 +101,8 @@ def register():
     register_button.grid(row=6, column=0, pady=10)
     back_button.grid(row=6, column=1, pady=10)
     register_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+    root.bind('<Return>', lambda x: submit())
 
 
 def login():
@@ -130,6 +136,7 @@ def login():
                 showinfo('Error', 'Wrong Password!')
         else:
             showinfo('Error', 'Username Not Found!')
+        root.unbind('<Return>')
 
     login_list = ['Username', 'Password']
     label_list = []
@@ -154,6 +161,8 @@ def login():
     login_button.grid(row=6, column=0, pady=10)
     back_button.grid(row=6, column=1, pady=10)
     login_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+    root.bind('<Return>', lambda x: submit())
 
 
 def run_quiz(quiz_number, user_name):
@@ -238,20 +247,27 @@ def run_quiz(quiz_number, user_name):
         # q_roll_df['Total'] = pd.DataFrame(legend_total_list)
         # q_roll_df['Legend'] = pd.DataFrame(legend_list)
         q_roll_df.to_csv(individual_reponses_path, index=False)
+
+        showinfo("Submission Successful", "Your responses have been submitted")
         quiz_menu(user_name)
 
-    run_quiz_frame = Frame(root, bg='grey')
+    run_quiz_frame = Frame(root)
     instructions_frame = Frame(run_quiz_frame)
     instructions_frame.pack(fill=BOTH)
     canvas = Canvas(run_quiz_frame)
+
     scroll_bar = Scrollbar(
         run_quiz_frame, orient='vertical', command=canvas.yview)
+    scroll_bar_x = Scrollbar(
+        run_quiz_frame, orient=HORIZONTAL, command=canvas.xview)
+
     scrollable_frame = Frame(canvas)
     scrollable_frame.bind("<Configure>", lambda e: canvas.configure(
         scrollregion=canvas.bbox('all')))
     scrollable_frame.pack(fill=BOTH)
+
     canvas.create_window((0, 0), window=scrollable_frame, anchor='nw')
-    canvas.configure(yscrollcommand=scroll_bar.set)
+    canvas.configure(yscrollcommand=scroll_bar.set, xscrollcommand=scroll_bar_x.set)
 
     quiz_file_path = os.path.join(
         cwd, 'quiz_wise_questions', 'q' + str(quiz_number) + '.csv')
@@ -259,16 +275,31 @@ def run_quiz(quiz_number, user_name):
     def clock(start_time):
         present_time = t.strftime("%M:%S")
         timer = datetime.datetime.strptime(
-            present_time, "%M:%S")-datetime.datetime.strptime(start_time, "%M:%S")
+            present_time, "%M:%S") - datetime.datetime.strptime(start_time, "%M:%S")
         second_elapsed = int(timer.total_seconds())
-        second_elapsed = int(minutes)*60 - second_elapsed
+        second_elapsed = int(minutes) * 60 - second_elapsed
         minute, second = divmod(second_elapsed, 60)
         modified_timer = "{:02d}:{:02d}".format(minute, second)
         timer_label.config(
-            text='time : ' + modified_timer, font='comicsans 18 bold')
+            text='Time left  : ' + modified_timer, font='comicsans 18 bold')
         if second_elapsed > 0:
             timer_label.after(1000, clock, start_time)
         else:
+            showinfo("Time up !!!", "Your time is up !!")
+            run_quiz_frame.destroy()
+            submit()
+
+    def update_unattempted():
+        unattempted_questions = 0
+        for response in response_list:
+            if response.get() == 'S':
+                unattempted_questions += 1
+        unattempted_label.config(text=f' : {unattempted_questions}')
+        unattempted_label.update()
+
+    def submit_shortcut():
+        reply = msg.askyesnocancel('Submit', 'Do you want to Submit?')
+        if reply:
             run_quiz_frame.destroy()
             submit()
 
@@ -279,8 +310,8 @@ def run_quiz(quiz_number, user_name):
         time_ = header_row[-1][-3:-1]
         minutes = time_
         seconds = '00'
-        timer_label = Label(instructions_frame, text='time : ' +
-                            minutes + ':' + seconds, font='comicsans 18 bold')
+        timer_label = Label(instructions_frame, text='Time left : ' +
+                                                     minutes + ':' + seconds, font='comicsans 18 bold')
         timer_label.grid(row=0, column=2, sticky='e')
         start_time = t.strftime("%M:%S")
         clock(start_time)
@@ -308,7 +339,7 @@ def run_quiz(quiz_number, user_name):
             response_list.append(StringVar(value='S'))
             data_list.append((row[6], row[7], row[8], row[9]))
             question_label = Label(
-                scrollable_frame, text=row[0] + '.' + row[1], font='comicsans 18')
+                scrollable_frame, text=row[0] + ') ' + row[1], font='comicsans 18')
             question_label.grid(row=grid_counter, column=0, sticky='w')
             grid_counter += 1
             describe_label = Label(scrollable_frame, text='mc:' + row[7] + ', mw:' + row[8] + ', cp:' + row[9],
@@ -321,14 +352,26 @@ def run_quiz(quiz_number, user_name):
                             tristatevalue='x').grid(
                     row=grid_counter, column=0, sticky='w')
                 grid_counter += 1
-            # response_list[question_counter] = response
             question_counter += 1
+
         Button(scrollable_frame, text='Submit', width=25, command=lambda: [submit(), run_quiz_frame.destroy()],
-               relief=GROOVE).grid(row=grid_counter, column=1)
+               relief=GROOVE).grid(row=grid_counter, column=2)
+        unattempted_label = Label(instructions_frame, text='', font='comicsans 18 bold')
+        unattempted_label.grid(row=1, column=3, sticky='w')
+
+        root.bind('<Control_L><Alt_L><U>', lambda x: update_unattempted())
+        root.bind('<Control_L><Alt_L><u>', lambda x: update_unattempted())
+        root.bind('<Control_L><Alt_L><F>', lambda x: submit_shortcut())
+        root.bind('<Control_L><Alt_L><f>', lambda x: submit_shortcut())
+
+        Button(instructions_frame, text='Number of Unattempted questions', command=update_unattempted).grid(row=1,
+                                                                                                            column=2,
+                                                                                                            sticky='e')
 
     run_quiz_frame.pack(fill=BOTH, expand=True)
-    canvas.pack(side=LEFT, fill='both', expand=True)
-    scroll_bar.pack(side='right', fill='y')
+    canvas.pack(side=LEFT,fill=BOTH, expand=True)
+    scroll_bar_x.pack(side=BOTTOM, fill=X)
+    scroll_bar.pack(side=RIGHT, fill=Y)
 
 
 def quiz_menu(username):
