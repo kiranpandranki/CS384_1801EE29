@@ -9,15 +9,17 @@ import pandas as pd
 import time as t
 cwd = os.getcwd()
 
+
 def main_menu():
-  main_menu_frame = Frame(root, bg='grey')
-  Button(main_menu_frame, text='Register', width=20, relief=RIDGE,
-         command=lambda: [register(), main_menu_frame.destroy()]).pack()
-  Button(main_menu_frame, text='Login', width=20, relief=RIDGE,
-         command=lambda: [login(), main_menu_frame.destroy()]).pack()
-  Button(main_menu_frame, text='Exit', width=20,
-         relief=RIDGE, command=quit).pack()
-  main_menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+    main_menu_frame = Frame(root, bg='grey')
+    Button(main_menu_frame, text='Register', width=20, relief=RIDGE,
+           command=lambda: [register(), main_menu_frame.destroy()]).pack()
+    Button(main_menu_frame, text='Login', width=20, relief=RIDGE,
+           command=lambda: [login(), main_menu_frame.destroy()]).pack()
+    Button(main_menu_frame, text='Exit', width=20,
+           relief=RIDGE, command=quit).pack()
+    main_menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
 
 def register():
     def back():
@@ -98,7 +100,65 @@ def register():
 
 
 def login():
-  pass
+    def back():
+        login_frame.destroy()
+        main_menu()
+
+    def submit():
+        for i in range(2):
+            if not text_variable_list[i].get():
+                showinfo('Error', 'Fill all credentials!')
+                return
+        with sqlite3.connect('project1_quiz_cs384.db') as db:
+            cursor = db.cursor()
+        find_user = 'SELECT * FROM project1_registration WHERE username = ?'
+        try:
+            cursor.execute(find_user, [(text_variable_list[0].get())])
+        except sqlite3.OperationalError:
+            showinfo('Error', 'No registrations found!\nPlease register first.')
+            back()
+            return
+
+        temp_list = cursor.fetchall()
+        if temp_list:
+            hash_password_temp = hashlib.sha224(
+                text_variable_list[1].get().encode()).hexdigest()
+            if hash_password_temp == temp_list[0][2]:
+                login_frame.destroy()
+                quiz_menu(text_variable_list[0].get())
+            else:
+                showinfo('Error', 'Wrong Password!')
+        else:
+            showinfo('Error', 'Username Not Found!')
+
+    login_list = ['Username', 'Password']
+    label_list = []
+    entry_list = []
+    text_variable_list = []
+    login_frame = Frame(root)
+    for i in range(2):
+        label_list.append(Label(login_frame, text=login_list[i] + '  :'))
+        label_list[i].grid(row=i + 1, column=0, sticky=W, padx=5)
+        text_variable_list.append(StringVar())
+        if i == 1:
+            entry_list.append(
+                Entry(login_frame, textvariable=text_variable_list[i], show='*'))
+        else:
+            entry_list.append(
+                Entry(login_frame, textvariable=text_variable_list[i]))
+        entry_list[i].grid(row=i + 1, column=1, padx=5)
+
+    login_button = Button(login_frame, text='Login',
+                          command=submit, relief=GROOVE)
+    back_button = Button(login_frame, text='Back', command=back, relief=GROOVE)
+    login_button.grid(row=6, column=0, pady=10)
+    back_button.grid(row=6, column=1, pady=10)
+    login_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+
+def quiz_menu(username):
+    pass
+
 
 root = Tk()
 root.geometry("1100x300")
