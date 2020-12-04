@@ -158,6 +158,7 @@ def login():
 
 def run_quiz(quiz_number, user_name):
     def submit():
+        showinfo("Submission Successful", "Your responses have been submitted")
         marks_obtained = 0
         total_marks = 0
         legend_correct_choices = 0
@@ -265,10 +266,11 @@ def run_quiz(quiz_number, user_name):
         minute, second = divmod(second_elapsed, 60)
         modified_timer = "{:02d}:{:02d}".format(minute, second)
         timer_label.config(
-            text='time : ' + modified_timer, font='comicsans 18 bold')
+            text='Time left  : ' + modified_timer, font='comicsans 18 bold')
         if second_elapsed > 0:
             timer_label.after(1000, clock, start_time)
         else:
+            showinfo("Time up !!!", "Your time is up !!")
             run_quiz_frame.destroy()
             submit()
 
@@ -279,7 +281,7 @@ def run_quiz(quiz_number, user_name):
         time_ = header_row[-1][-3:-1]
         minutes = time_
         seconds = '00'
-        timer_label = Label(instructions_frame, text='time : ' +
+        timer_label = Label(instructions_frame, text='Time left : ' +
                             minutes + ':' + seconds, font='comicsans 18 bold')
         timer_label.grid(row=0, column=2, sticky='e')
         start_time = t.strftime("%M:%S")
@@ -308,7 +310,7 @@ def run_quiz(quiz_number, user_name):
             response_list.append(StringVar(value='S'))
             data_list.append((row[6], row[7], row[8], row[9]))
             question_label = Label(
-                scrollable_frame, text=row[0] + '.' + row[1], font='comicsans 18')
+                scrollable_frame, text=row[0] + ') ' + row[1], font='comicsans 18')
             question_label.grid(row=grid_counter, column=0, sticky='w')
             grid_counter += 1
             describe_label = Label(scrollable_frame, text='mc:' + row[7] + ', mw:' + row[8] + ', cp:' + row[9],
@@ -321,7 +323,6 @@ def run_quiz(quiz_number, user_name):
                             tristatevalue='x').grid(
                     row=grid_counter, column=0, sticky='w')
                 grid_counter += 1
-            # response_list[question_counter] = response
             question_counter += 1
         Button(scrollable_frame, text='Submit', width=25, command=lambda: [submit(), run_quiz_frame.destroy()],
                relief=GROOVE).grid(row=grid_counter, column=1)
