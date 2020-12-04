@@ -1,3 +1,6 @@
+#Name:M.Rishikanth      Roll:1801EE24
+#Name:P.Kiran           Roll:1801EE29
+
 from tkinter import *
 from tkinter.messagebox import showinfo
 import tkinter.messagebox as msg
@@ -167,7 +170,6 @@ def login():
 
 def run_quiz(quiz_number, user_name):
     def submit():
-        showinfo("Submission Successful", "Your responses have been submitted")
         marks_obtained = 0
         total_marks = 0
         legend_correct_choices = 0
@@ -287,8 +289,6 @@ def run_quiz(quiz_number, user_name):
             timer_label.after(1000, clock, start_time)
         else:
             showinfo("Time up !!!", "Your time is up !!")
-<<<<<<< HEAD
-=======
             run_quiz_frame.destroy()
             submit()
 
@@ -303,7 +303,6 @@ def run_quiz(quiz_number, user_name):
     def submit_shortcut():
         reply = msg.askyesnocancel('Submit', 'Do you want to Submit?')
         if reply:
->>>>>>> 09258ea2f92d8cff0db0abe7871b0eb05ce0b765
             run_quiz_frame.destroy()
             submit()
 
@@ -311,15 +310,10 @@ def run_quiz(quiz_number, user_name):
         reader = csv.reader(file_read)
         header_row = next(reader)
 
-        time_ = header_row[-1][-3:-1]
+        time_ = header_row[-1][5:-1]
         minutes = time_
         seconds = '00'
-        timer_label = Label(instructions_frame, text='Time left : ' +
-<<<<<<< HEAD
-                            minutes + ':' + seconds, font='comicsans 18 bold')
-=======
-                                                     minutes + ':' + seconds, font='comicsans 18 bold')
->>>>>>> 09258ea2f92d8cff0db0abe7871b0eb05ce0b765
+        timer_label = Label(instructions_frame, text='Time left : ' + minutes + ':' + seconds, font='comicsans 18 bold')
         timer_label.grid(row=0, column=2, sticky='e')
         start_time = t.strftime("%M:%S")
         clock(start_time)
@@ -377,7 +371,7 @@ def run_quiz(quiz_number, user_name):
                                                                                                             sticky='e')
 
     run_quiz_frame.pack(fill=BOTH, expand=True)
-    canvas.pack(side=LEFT,fill=BOTH, expand=True)
+    canvas.pack(side=LEFT, fill=BOTH, expand=True)
     scroll_bar_x.pack(side=BOTTOM, fill=X)
     scroll_bar.pack(side=RIGHT, fill=Y)
 
