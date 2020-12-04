@@ -157,6 +157,31 @@ def login():
 
 
 def quiz_menu(username):
+    def back():
+        quiz_frame.destroy()
+        main_menu()
+
+    quiz_frame = Frame(root)
+    with sqlite3.connect('project1_quiz_cs384.db') as db:
+        cursor = db.cursor()
+    find_user = 'SELECT * FROM project1_registration WHERE username = ?'
+    cursor.execute(find_user, [username])
+    name_of_student = cursor.fetchall()[0][3]
+    Label(quiz_frame,
+          text=f"Name : {name_of_student}\nRoll : {username}", font='comicsans 18 bold').pack()
+    Button(quiz_frame, text='Quiz-1', width=25, command=lambda: [run_quiz(1, username), quiz_frame.destroy()],
+           relief=GROOVE).pack()
+    Button(quiz_frame, text='Quiz-2', width=25, command=lambda: [run_quiz(2, username), quiz_frame.destroy()],
+           relief=GROOVE).pack()
+    Button(quiz_frame, text='Quiz-3', width=25, command=lambda: [run_quiz(3, username), quiz_frame.destroy()],
+           relief=GROOVE).pack()
+
+    Button(quiz_frame, text='Logout', width=20,
+           command=back, relief=GROOVE).pack(pady=(25, 0))
+    quiz_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+
+def run_quiz(quiz_number, user_name):
     pass
 
 
