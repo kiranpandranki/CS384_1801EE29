@@ -1,0 +1,11 @@
+ques_no,question,option1,option2,option3,option4,correct_option,marks_correct_ans,marks_wrong_ans,compulsory,time=25m
+1,What is the capital of Andhrapradesh,Vizag,Amaravathi,Kurnool,All of these,4,5,-1,y,
+2,4+6 =,10,7,9,8,1,4,-1,y,
+3,Capital of France,Paris,Patna,Amhara,London,1,8,-2,n,
+4,4 * 10 = ,10,20,30,40,4,2,0,y,
+5,Capital of Bihar,Paris,Patna,Amhara,London,2,8,-2,y,
+6,Capital of Punjab,Paris,Patna,Chandigarh,London,3,6,-2,n,
+7,Number of Sense organs in a human body,5,6,7,8,1,5,0,y,
+8,which of these is a fundamental force,Gravitational,Biscuit,chocolate,thor,1,4,-1,y,
+9,which of these is a fundamental force,Electro-magnetic,Biscuit,chocolate,thor,1,4,-1,y,
+10,5.0 / 2.0 = ,3.5,2.5,3,1.2,2,3,0,n,
