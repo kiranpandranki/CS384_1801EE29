@@ -155,6 +155,7 @@ def login():
     back_button.grid(row=6, column=1, pady=10)
     login_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
+
 def run_quiz(quiz_number, user_name):
     def submit():
         marks_obtained = 0
@@ -293,7 +294,8 @@ def run_quiz(quiz_number, user_name):
         find_user = 'SELECT * FROM project1_registration WHERE username = ?'
         cursor.execute(find_user, [user_name])
         name_of_student = cursor.fetchall()[0][3]
-        Label(instructions_frame,text=f"Name : {name_of_student}\nRoll : {user_name}",font='comicsans 18 bold').grid(row=grid_counter, column=0, sticky='w')
+        Label(instructions_frame, text=f"Name : {name_of_student}\nRoll : {user_name}", font='comicsans 18 bold').grid(
+            row=grid_counter, column=0, sticky='w')
         Label(instructions_frame, text=f'''Quiz Number : {quiz_number}
                                             Test Instructions:
                                     mc -> marks awarded for correct choice
@@ -328,6 +330,7 @@ def run_quiz(quiz_number, user_name):
     canvas.pack(side=LEFT, fill='both', expand=True)
     scroll_bar.pack(side='right', fill='y')
 
+
 def quiz_menu(username):
     def back():
         quiz_frame.destroy()
@@ -351,7 +354,6 @@ def quiz_menu(username):
     Button(quiz_frame, text='Logout', width=20,
            command=back, relief=GROOVE).pack(pady=(25, 0))
     quiz_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
-
 
 
 root = Tk()
