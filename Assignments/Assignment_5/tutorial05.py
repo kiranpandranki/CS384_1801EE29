@@ -8,7 +8,7 @@ cwd_path = os.getcwd()
 Subtitles_path = os.path.join(cwd_path, 'Subtitles')
 
 
-def rename_FIR(folder_name):
+def rename_FIR():
     # rename Logic
     global Subtitles_path
     FIR_path = os.path.join(Subtitles_path, 'FIR')
@@ -35,10 +35,11 @@ def rename_FIR(folder_name):
             os.rename(old_file_path, new_file_path)
         except:
             os.remove(old_file_path)
+    print("\nFIR folder has been renamed")
     return None
 
 
-def rename_Game_of_Thrones(folder_name):
+def rename_Game_of_Thrones():
     # rename Logic
     global Subtitles_path
     GOT_path = os.path.join(Subtitles_path, 'Game of Thrones')
@@ -46,7 +47,7 @@ def rename_Game_of_Thrones(folder_name):
     episode_pad = int(input("Enter the episode padding : "))
     regex = re.compile(
         r'([A-Za-z ]+)-([0-9x ]+)-([a-zA-Z ]+)')
-    for path, dirs, files in os.walk(Subtitles_path):
+    for path, dirs, files in os.walk(GOT_path):
         if(path == GOT_path):
             files_list = files
             break
@@ -71,10 +72,11 @@ def rename_Game_of_Thrones(folder_name):
             os.rename(old_file_path, new_file_path)
         except:
             os.remove(old_file_path)
+    print("\nGame of Thrones folder has been renamed")
     return None
 
 
-def rename_Sherlock(folder_name):
+def rename_Sherlock():
     # rename Logic
     global Subtitles_path
     SH_path = os.path.join(Subtitles_path, 'Sherlock')
@@ -105,10 +107,12 @@ def rename_Sherlock(folder_name):
             os.rename(old_file_path, new_file_path)
         except:
             os.remove(old_file_path)
+
+    print("\nSherlock folder has been renamed")
     return None
 
 
-def rename_Suits(folder_name):
+def rename_Suits():
     # rename Logic
     global Subtitles_path
     S_path = os.path.join(Subtitles_path, 'Suits')
@@ -141,10 +145,11 @@ def rename_Suits(folder_name):
             os.rename(old_file_path, new_file_path)
         except:
             os.remove(old_file_path)
+    print("\nSuits folder has been renamed")
     return None
 
 
-def rename_How_I_Met_Your_Mother(folder_name):
+def rename_How_I_Met_Your_Mother():
     # rename Logic
     global Subtitles_path
     HIMYM_path = os.path.join(Subtitles_path, 'How I Met Your Mother')
@@ -191,4 +196,50 @@ def rename_How_I_Met_Your_Mother(folder_name):
             os.rename(old_file_path, new_file_path)
         except:
             os.remove(old_file_path)
+    print("\nHow I Met Your Mother folder has been renamed")
     return None
+
+
+web_series_list = ['FIR', 'Game of Thrones',
+                   'How I Met Your Mother', 'Sherlock', 'Suits','Exit']
+option_list = []
+while(True):
+    print('_'*70)
+    for i in range(6):
+        print(f"{i+1}) "+web_series_list[i])
+    option = input("Select a web series name for renaming subtitle files : ")
+    if option in option_list:
+        print("\nThis folder has already been renamed\nPlease select another option")
+        continue
+    else:
+        option_list.append(option)
+    if option == '1':
+        try:
+            rename_FIR()
+        except:
+            print("\nThis folder has already been renamed\nPlease select another option")
+    elif option == '2':
+        try:
+            rename_Game_of_Thrones()
+        except:
+            print("\nThis folder has already been renamed\nPlease select another option")
+    elif option == '3':
+        try:
+            rename_How_I_Met_Your_Mother()
+        except:
+            print("\nThis folder has already been renamed\nPlease select another option")
+    elif option == '4':
+        try:
+            rename_Sherlock()
+        except:
+            print("\nThis folder has already been renamed\nPlease select another option")
+    elif option == '5':
+        try:
+            rename_Suits()
+        except:
+            print("\nThis folder has already been renamed\nPlease select another option")
+    elif option == '6':
+        exit()
+    else:
+        print("Select a valid option")
+
